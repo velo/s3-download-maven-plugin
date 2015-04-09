@@ -10,7 +10,7 @@
 
     <groupId>com.upplication.maven.plugins</groupId>
     <artifactId>s3-download-maven-plugin</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>S3 download maven plugin</name>
