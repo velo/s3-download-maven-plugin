@@ -59,6 +59,9 @@ public class S3DownloadMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
+        getLog().info("--- s3-download-maven-plugin");
+        getLog().info(String.format("Bucket: %s, source: %s, destination: %s\n", bucketName, source, destination));
+        
         AmazonS3 s3 = getS3Client(accessKey, secretKey);
         if (endpoint != null) {
             s3.setEndpoint(endpoint);
