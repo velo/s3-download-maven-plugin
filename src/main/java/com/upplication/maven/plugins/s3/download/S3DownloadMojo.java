@@ -24,19 +24,19 @@ public class S3DownloadMojo extends AbstractMojo {
     /**
      * Access key for S3.
      */
-    @Parameter(property = "s3-download.accessKey")
+    @Parameter(property = "s3-download.accessKey", required = true)
     private String accessKey;
 
     /**
      * Secret key for S3.
      */
-    @Parameter(property = "s3-download.secretKey")
+    @Parameter(property = "s3-download.secretKey", required = true)
     private String secretKey;
 
     /**
      * The file/folder to download.
      */
-    @Parameter(property = "s3-download.source", required = true)
+    @Parameter(property = "s3-download.source")
     private String source;
 
     /**
@@ -61,6 +61,10 @@ public class S3DownloadMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         getLog().info("--- s3-download-maven-plugin");
         getLog().info(String.format("Bucket: %s, source: %s, destination: %s\n", bucketName, source, destination));
+        
+        if (source == null) {
+            source = "";
+        }
         
         AmazonS3 s3 = getS3Client(accessKey, secretKey);
         if (endpoint != null) {
