@@ -17,7 +17,14 @@ I wanna all my projects share what I think makes life easier without having to r
 
 This way, a script can remember to copy and paste for me.
 
-As a preparation step, it's really wise to run
+How to apply boilerplate to existing project:
 ````
+$ git remote add boilerplate git@github.com:velo/boilerplate.maven.git
+$ git fetch --all
 $ mvn com.github.ekryd.sortpom:sortpom-maven-plugin:2.4.0:sort -Dsort.keepBlankLines=true "-Dsort.lineSeparator=\n" -Dsort.predefinedSortOrder=custom_1 -Dsort.createBackupFile=false
+$ git commit -am "Preparation for boilderplate - pom format"
+$ git merge boilerplate/master --allow-unrelated-histories
+$ git mergetool
+$ git commit
+$ git push
 ````
