@@ -21,7 +21,7 @@ How to apply boilerplate to existing project:
 ````
 $ git remote add boilerplate git@github.com:velo/boilerplate.maven.git
 $ git fetch --all
-$ mvn com.github.ekryd.sortpom:sortpom-maven-plugin:2.4.0:sort -Dsort.keepBlankLines=true "-Dsort.lineSeparator=\n" -Dsort.predefinedSortOrder=custom_1 -Dsort.createBackupFile=false
+$ mvn com.github.ekryd.sortpom:sortpom-maven-plugin:2.10.0:sort -Dsort.keepBlankLines=true "-Dsort.lineSeparator=\n" -Dsort.predefinedSortOrder=custom_1 -Dsort.createBackupFile=false
 $ git commit -am "Preparation for boilderplate - pom format"
 $ git merge boilerplate/master --allow-unrelated-histories
 $ git mergetool
