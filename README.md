@@ -13,6 +13,8 @@ Configuration parameters
 |accessKey|S3 access key | *yes* | if unspecified, uses the Default Provider, falling back to env variables |
 |secretKey|S3 secret key | *yes* | if unspecified, uses the Default Provider, falling back to env variables |
 |endpoint|Use a different s3 endpoint| *no* | s3.amazonaws.com |
+|signingRegion|SigningRegion the region to use for SigV4 signing of requests. Only used when `endpoint` is present| *no* | null |
+|skipSslVerification|Skip endpoint verification| *no* | false |
 
 Example: Download a bucket
 ----------------------
@@ -24,9 +26,9 @@ Example: Download a bucket
     ...
 
     <plugin>
-      <groupId>com.upplication.maven.plugins</groupId>
+      <groupId>com.marvinformatics</groupId>
       <artifactId>s3-download-maven-plugin</artifactId>
-      <version>1.0.2-SNAPSHOT</version>
+      <version>0.3</version>
       <executions>
         <execution>
             <phase>your phase</phase>
