@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2017 Marvin Herman Froeder (marvin@marvinformatics.com)
+    Copyright (C) 2023 Marvin Herman Froeder (marvin@marvinformatics.com)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -29,8 +29,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <java.version>11</java.version>
     <encoding>UTF-8</encoding>
   </properties>
 
@@ -52,12 +51,6 @@
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
       <version>1.12.428</version>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.11.0</version>
     </dependency>
   </dependencies>
 
@@ -122,24 +115,6 @@
               <goal>prepare-agent</goal>
               <goal>report</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.eluder.coveralls</groupId>
-        <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.3.0</version>
-        <configuration>
-          <skip>${skipTests}</skip>
-          <repoToken>${coveralls.token}</repoToken>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>report</goal>
-            </goals>
-            <phase>verify</phase>
           </execution>
         </executions>
       </plugin>
@@ -251,10 +226,14 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.0.1</version>
+        <version>3.5.0</version>
         <configuration>
           <failOnWarning>true</failOnWarning>
           <ignoreNonCompile>true</ignoreNonCompile>
+          <ignoredUsedUndeclaredDependencies>
+            <dep>org.apache.httpcomponents:httpclient:jar:4.5.13</dep>
+            <dep>com.amazonaws:aws-java-sdk-core:jar:1.12.428</dep>
+          </ignoredUsedUndeclaredDependencies>
         </configuration>
         <executions>
           <execution>
@@ -272,7 +251,7 @@
 
   <url>https://github.com/velo/s3-download-maven-plugin/</url>
 
-  <inceptionYear>${year}</inceptionYear>
+  <inceptionYear>2023</inceptionYear>
 
   <licenses>
     <license>
