@@ -1,22 +1,31 @@
 package com.upplication.maven.plugins.s3.download;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.*;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.security.NoSuchAlgorithmException;
+import javax.net.ssl.SSLContext;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
 @Mojo(name = "s3-download")
 public class S3DownloadMojo extends AbstractMojo {
@@ -56,6 +65,13 @@ public class S3DownloadMojo extends AbstractMojo {
      */
     @Parameter(property = "s3-download.endpoint")
     private String endpoint;
+    
+
+    /**
+     * Skip endpoint SSL verification.
+     */
+    @Parameter(property = "s3-download.skipSslVerification")
+    private boolean skipSslVerification;
 
     @Override
     public void execute() throws MojoExecutionException {
@@ -92,7 +108,7 @@ public class S3DownloadMojo extends AbstractMojo {
      * @param secretKey Secret key
      * @return Amazon S3 client
      */
-    private static AmazonS3 getS3Client(String accessKey, String secretKey) {
+    private   AmazonS3 getS3Client(String accessKey, String secretKey) {
         AWSCredentialsProvider provider;
         if (accessKey != null && secretKey != null) {
             AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -101,7 +117,21 @@ public class S3DownloadMojo extends AbstractMojo {
             provider = new DefaultAWSCredentialsProviderChain();
         }
 
-        return new AmazonS3Client(provider);
+	    ClientConfiguration cfg = new ClientConfiguration();
+	    if (skipSslVerification) {
+	      try {
+	        cfg.getApacheHttpClientConfig()
+	            .setSslSocketFactory(
+	                new SSLConnectionSocketFactory(
+	                    SSLContext.getDefault(), NoopHostnameVerifier.INSTANCE));
+	      } catch (NoSuchAlgorithmException e) {
+	        throw new RuntimeException(e);
+	      }
+	    }
+	    return AmazonS3ClientBuilder.standard()
+	        .withCredentials(provider)
+	        .withClientConfiguration(cfg)
+	        .build();
     }
 
     /**
