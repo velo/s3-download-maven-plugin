@@ -25,6 +25,7 @@
   <packaging>maven-plugin</packaging>
 
   <name>S3 download maven plugin</name>
+  <description>Downloads a file or (recursively) the contents of a directory from S3 as part of maven build</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -402,7 +403,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.0.1</version>
+            <version>1.6</version>
             <configuration>
               <passphraseServerId>ossrh</passphraseServerId>
             </configuration>
