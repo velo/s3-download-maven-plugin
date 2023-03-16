@@ -18,9 +18,10 @@ package com.upplication.maven.plugins.s3.download;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.internal.StaticCredentialsProvider;
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -83,6 +84,14 @@ public class S3DownloadMojo extends AbstractMojo {
     private String endpoint;
 
     /**
+     * SigningRegion the region to use for SigV4 signing of requests (e.g.
+     * us-west-1).
+     * 
+     * Only used when endpoint is present
+     */
+    @Parameter(property = "s3-download.signingRegion")
+    private String signingRegion;
+    /**
      * Skip endpoint SSL verification.
      */
     @Parameter(property = "s3-download.skipSslVerification")
@@ -98,9 +107,6 @@ public class S3DownloadMojo extends AbstractMojo {
         }
 
         AmazonS3 s3 = getS3Client(accessKey, secretKey);
-        if (endpoint != null) {
-            s3.setEndpoint(endpoint);
-        }
 
         if (!s3.doesBucketExist(bucketName)) {
             throw new MojoExecutionException("Bucket doesn't exist: " + bucketName);
@@ -129,7 +135,7 @@ public class S3DownloadMojo extends AbstractMojo {
         AWSCredentialsProvider provider;
         if (accessKey != null && secretKey != null) {
             AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
-            provider = new StaticCredentialsProvider(credentials);
+            provider = new AWSStaticCredentialsProvider(credentials);
         } else {
             provider = new DefaultAWSCredentialsProviderChain();
         }
@@ -145,9 +151,17 @@ public class S3DownloadMojo extends AbstractMojo {
                 throw new RuntimeException(e);
             }
         }
+
+        EndpointConfiguration endpointConfiguration = null;
+        if (endpoint != null) {
+            endpointConfiguration = new EndpointConfiguration(endpoint, signingRegion);
+        }
+
         return AmazonS3ClientBuilder.standard()
                 .withCredentials(provider)
                 .withClientConfiguration(cfg)
+                .withEndpointConfiguration(endpointConfiguration)
+                .withPathStyleAccessEnabled(true)
                 .build();
     }
 

@@ -21,7 +21,7 @@
 
   <groupId>com.marvinformatics</groupId>
   <artifactId>s3-download-maven-plugin</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>0.3</version>
   <packaging>maven-plugin</packaging>
 
   <name>S3 download maven plugin</name>
@@ -50,7 +50,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>1.12.428</version>
+      <version>1.11.939</version>
     </dependency>
   </dependencies>
 
@@ -69,7 +69,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.0.0-M1</version>
+          <version>3.5.0</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -232,7 +232,7 @@
           <ignoreNonCompile>true</ignoreNonCompile>
           <ignoredUsedUndeclaredDependencies>
             <dep>org.apache.httpcomponents:httpclient:jar:4.5.13</dep>
-            <dep>com.amazonaws:aws-java-sdk-core:jar:1.12.428</dep>
+            <dep>com.amazonaws:aws-java-sdk-core:jar:1.11.939</dep>
           </ignoredUsedUndeclaredDependencies>
         </configuration>
         <executions>
