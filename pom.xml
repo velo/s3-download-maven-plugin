@@ -231,8 +231,9 @@
           <failOnWarning>true</failOnWarning>
           <ignoreNonCompile>true</ignoreNonCompile>
           <ignoredUsedUndeclaredDependencies>
-            <dep>org.apache.httpcomponents:httpclient:jar:4.5.13</dep>
-            <dep>com.amazonaws:aws-java-sdk-core:jar:1.11.939</dep>
+            <dep>org.apache.httpcomponents:httpclient</dep>
+            <dep>org.apache.httpcomponents:httpcore</dep>
+            <dep>com.amazonaws:aws-java-sdk-core</dep>
           </ignoredUsedUndeclaredDependencies>
         </configuration>
         <executions>

@@ -34,10 +34,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.security.NoSuchAlgorithmException;
-import javax.net.ssl.SSLContext;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -130,8 +130,9 @@ public class S3DownloadMojo extends AbstractMojo {
      * @param secretKey
      *            Secret key
      * @return Amazon S3 client
+     * @throws MojoExecutionException
      */
-    private AmazonS3 getS3Client(String accessKey, String secretKey) {
+    private AmazonS3 getS3Client(String accessKey, String secretKey) throws MojoExecutionException {
         AWSCredentialsProvider provider;
         if (accessKey != null && secretKey != null) {
             AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -143,12 +144,14 @@ public class S3DownloadMojo extends AbstractMojo {
         ClientConfiguration cfg = new ClientConfiguration();
         if (skipSslVerification) {
             try {
+                SSLContextBuilder sslContextBuilder = SSLContextBuilder.create();
+                sslContextBuilder.loadTrustMaterial(TrustSelfSignedStrategy.INSTANCE);
                 cfg.getApacheHttpClientConfig()
                         .setSslSocketFactory(
                                 new SSLConnectionSocketFactory(
-                                        SSLContext.getDefault(), NoopHostnameVerifier.INSTANCE));
-            } catch (NoSuchAlgorithmException e) {
-                throw new RuntimeException(e);
+                                        sslContextBuilder.build(), NoopHostnameVerifier.INSTANCE));
+            } catch (Exception e) {
+                throw new MojoExecutionException("Unable to skip ssl verification", e);
             }
         }
 
